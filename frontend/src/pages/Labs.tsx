@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Footer, SiteNav } from '../components/SiteNav'
 import { LabDotPlot, Provenance } from '../components/ui'
+import { apiUrl } from '../lib/api'
 import { useMission } from '../lib/mission'
 import type { LabSeries } from '../lib/types'
 
@@ -15,7 +16,7 @@ export default function Labs() {
   const [crew, setCrew] = useState(m.crew)
   const [panel, setPanel] = useState<(typeof PANELS)[number]['id']>('CBC')
   const [labs, setLabs] = useState<LabSeries[]>([])
-  useEffect(() => { fetch(`/api/labs/${crew}`).then((r) => r.json()).then(setLabs).catch(() => setLabs([])) }, [crew])
+  useEffect(() => { fetch(apiUrl(`/api/labs/${crew}`)).then((r) => r.json()).then(setLabs).catch(() => setLabs([])) }, [crew])
   const shown = labs.filter((s) => s.panel === panel)
 
   return (

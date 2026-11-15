@@ -1,0 +1,50 @@
+# Render Blueprint: creates the AEGIS backend (FastAPI) and frontend (static React site).
+# Render dashboard → New → Blueprint → pick this repository.
+services:
+  # ── Backend API ─────────────────────────────────────────────
+  - type: web
+    name: aegis-api
+    runtime: python
+    plan: free                      # switch to "starter" (+ the disk below) for always-on + data that survives restarts
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: ANTHROPIC_API_KEY      # set in the dashboard (never committed)
+        sync: false
+      - key: OPENAI_API_KEY         # set in the dashboard (never committed)
+        sync: false
+      - key: EMBEDDING_MODEL
+        value: text-embedding-3-small
+      - key: CORS_ORIGINS           # the API holds no cookies; any origin may call it
+        value: "*"
+    # Persistent storage for chats, memories, check-ins and reports (paid plans only):
+    # disk:
+    #   name: aegis-data
+    #   mountPath: /opt/render/project/src/backend/data
+    #   sizeGB: 1
+
+  # ── Frontend (static site) ──────────────────────────────────
+  - type: web
+    name: aegis-web
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: NODE_VERSION
+        value: 22.12.0
+      - key: VITE_API_HOST          # the backend's public host, filled in by Render
+        fromService:
+          type: web
+          name: aegis-api
+          property: host
+    routes:
+      - type: rewrite               # single-page app: every path serves index.html
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /images/*
+        name: Cache-Control
+        value: public, max-age=604800

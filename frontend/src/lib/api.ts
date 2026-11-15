@@ -1,7 +1,15 @@
 import type { Briefing, Chunk, CrewCard, Dashboard, EnvId, Memory, Reading, Routine, SentReport, SessionFull, SpaceWeather, StreamEvent } from './types'
 
+/**
+ * Backend address. Locally it is empty (Vite proxies /api to :8000).
+ * On Render the static site is built with VITE_API_HOST (e.g. "aegis-api.onrender.com") or VITE_API_BASE (full URL).
+ */
+const RAW = (import.meta.env.VITE_API_BASE || import.meta.env.VITE_API_HOST || '').replace(/\/$/, '')
+export const API_BASE = RAW && !/^https?:\/\//.test(RAW) ? `https://${RAW}` : RAW
+export const apiUrl = (path: string) => `${API_BASE}${path}`
+
 async function json<T>(url: string, init?: RequestInit): Promise<T> {
-  const r = await fetch(url, init)
+  const r = await fetch(apiUrl(url), init)
   if (!r.ok) {
     let detail = `${r.status} ${r.statusText}`
     try { detail = (await r.json()).detail ?? detail } catch { /* not json */ }
@@ -53,7 +61,7 @@ export const api = {
 
 /** POST + read a text/event-stream body, yielding parsed `data:` events. */
 async function* sse(url: string, body?: unknown): AsyncGenerator<StreamEvent> {
-  const r = await fetch(url, {
+  const r = await fetch(apiUrl(url), {
     method: 'POST',
     headers: body ? { 'Content-Type': 'application/json' } : undefined,
     body: body ? JSON.stringify(body) : undefined,

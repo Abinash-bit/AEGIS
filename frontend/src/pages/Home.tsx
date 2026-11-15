@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, BookOpenText, Eye, Radar, Users } from 'lucide-react'
 import { Footer, SiteNav } from '../components/SiteNav'
 import { Provenance } from '../components/ui'
-import { api } from '../lib/api'
+import { api, apiUrl } from '../lib/api'
 import { HAZARDS, fmtDelay } from '../lib/hazards'
 import type { Environment, SpaceWeather } from '../lib/types'
 
@@ -19,7 +19,7 @@ function useLive() {
   const [chunks, setChunks] = useState<number>()
   useEffect(() => {
     api.spaceWeather().then(setSw).catch(() => {})
-    fetch('/api/meta').then((r) => r.json())
+    fetch(apiUrl('/api/meta')).then((r) => r.json())
       .then((m) => setMarsDelay((m.environments as Environment[]).find((e) => e.id === 'mars_transit')?.comms_delay_s))
       .catch(() => {})
     api.health().then((h) => setChunks(h.kb_chunks)).catch(() => {})
