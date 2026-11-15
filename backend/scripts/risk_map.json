@@ -1,0 +1,23 @@
+{
+  "_note": "NASA HRP risk -> hazards it is driven by, plus keywords used to tag chunks. Edit freely; rerun build_kb.py.",
+  "risks": {
+    "immune":            {"name": "Risk of Altered Immune System Responses", "hazards": ["space_radiation", "hostile_closed_environments", "isolation_confinement", "gravity_fields"], "keywords": ["immune", "latent vir", "reactivat", "cold sore", "rash", "allerg", "biomarker", "saliva"]},
+    "sensorimotor":      {"name": "Risk of Altered Sensorimotor and Vestibular Function", "hazards": ["gravity_fields"], "keywords": ["sensorimotor", "vestibular", "motion sickness", "disorient", "balance", "orient"]},
+    "cardiovascular":    {"name": "Risk of Cardiovascular Adaptations", "hazards": ["gravity_fields", "space_radiation"], "keywords": ["cardiovascular", "heart", "blood vessel", "blood pressure", "arrhythm", "arrythm", "clot", "orthostatic", "faint"]},
+    "decompression":     {"name": "Risk of Decompression Sickness", "hazards": ["hostile_closed_environments"], "keywords": ["decompression", "the bends", "prebreath", "pre-breath", "nitrogen"]},
+    "microbes":          {"name": "Risk of Adverse Outcomes Due to Host-Microorganism Interactions", "hazards": ["hostile_closed_environments"], "keywords": ["microb", "bacteria", "fung", "microorganism", "swab", "microbiome"]},
+    "hypoxia":           {"name": "Risk of Hypoxia", "hazards": ["hostile_closed_environments"], "keywords": ["hypoxi", "oxygen level", "low oxygen"]},
+    "nutrition":         {"name": "Risk of Inadequate Food and Nutrition", "hazards": ["distance_from_earth"], "keywords": ["food", "nutrition", "diet", "vitamin", "menu", "calori", "meal"]},
+    "eva":               {"name": "Risk of Injury and Compromised Performance Due to EVA Operations", "hazards": ["gravity_fields", "hostile_closed_environments"], "keywords": ["spacewalk", "eva", "extravehicular", "spacesuit"]},
+    "fitness":           {"name": "Risk of Reduced Cardiorespiratory and Musculoskeletal Fitness", "hazards": ["gravity_fields"], "keywords": ["fitness", "muscle", "exercise", "treadmill", "aerobic", "strength"]},
+    "sans":              {"name": "Risk of Spaceflight Associated Neuro-ocular Syndrome (SANS)", "hazards": ["gravity_fields"], "keywords": ["sans", "neuro-ocular", "vision", "eye", "optic", "intracranial", "fluid shift", "brain fluid", "thigh cuff"]},
+    "bone":              {"name": "Risk of Spaceflight-Induced Bone Changes", "hazards": ["gravity_fields"], "keywords": ["bone", "osteopor", "fracture", "skeletal", "spine", "spinal"]},
+    "behavioral":        {"name": "Risk of Behavioral Changes and Psychiatric Disorders", "hazards": ["isolation_confinement"], "keywords": ["behavioral", "psychiatr", "mood", "depress", "anxiety", "stress", "mental", "cognit", "well-being", "wellbeing"]},
+    "teamwork":          {"name": "Risk of Inadequate Teamwork", "hazards": ["isolation_confinement"], "keywords": ["teamwork", "crew cohesion", "team cohesion", "team performance", "crew conflict", "interpersonal", "crew dynamics"]},
+    "sleep":             {"name": "Risk from Inadequate Sleep and Irregular Schedules", "hazards": ["isolation_confinement"], "keywords": ["sleep", "circadian", "fatigue", "actigraph", "schedule", "light exposure"]},
+    "systems_ops":       {"name": "Risk of Inadequate Systems Operations Support", "hazards": ["distance_from_earth"], "keywords": ["autonom", "communication delay", "delay", "ground support", "mission control", "procedure"]},
+    "dynamic_loads":     {"name": "Risk of Injury from Dynamic Loads", "hazards": ["gravity_fields"], "keywords": ["dynamic load", "re-entry", "reentry", "occupant protection", "landing loads", "g-forces", "g forces", "splashdown"]},
+    "radiation_cancer":  {"name": "Risk of Radiation-Induced Cancers", "hazards": ["space_radiation"], "keywords": ["radiation", "cancer", "carcino", "cosmic ray", "solar particle", "dosimet", "shield", "neutron", "dose"]},
+    "medical":           {"name": "Risk of Adverse Health Outcomes Due to Medical Conditions (distance)", "hazards": ["distance_from_earth"], "keywords": ["medical", "flight surgeon", "telemedicine", "diagnos", "emergency", "medicine", "pharmac", "medication"]}
+  }
+}

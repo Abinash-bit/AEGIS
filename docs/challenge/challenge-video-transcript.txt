@@ -1,0 +1,18 @@
+2026 NASA Space Apps Challenge - Brazilian Space Agency challenge intro
+Source: https://www.youtube.com/watch?v=RERG3gEmdC8 (official English captions)
+
+[00:03] Welcome to the 2026 NASA Space Apps Challenge. I am Rodrigo Leonardi, acting president of the Brazilian Space Agency. Our agency is the author for the following challenge:
+
+[00:19] Create health monitoring software for astronauts on space missions. Human space flight missions are getting longer and more independent from Earth. NASA's ongoing Artemis program has already taken a crew around the Moon, and Mars is the next milestone.
+
+[00:43] So imagine you're halfway to Mars. Suddenly your fellow crewmate feels a sharp pain in the chest and collapses. What's happening? Is he or she dying? What should you do in this situation?
+
+[01:02] So, here is your challenge. Create software that helps astronauts assess their own health and gives guidance on what to do in an emergency situation. Think outside the box. Remember that astronauts are not doctors. Your tool should explain how to take each measurement, why it matters, and what to do when a value does not look normal.
+
+[01:25] And you can go further. Remind the crew to take measurements. Adapt it to different environments, like a spacecraft, a space station, or a base on the surface of the Moon.
+
+[01:40] To get started, explore NASA's Human Research Program to understand the risks of space for the human body and the health indicators that are relevant in this context. You can also use NASA's Open Science Data Repository, which gathers real spaceflight biology data, for inspiration and to test your ideas.
+
+[02:12] Now, why choose this challenge? Because it combines science, design, space habitation, and code in a problem that matters for real deep space missions, potentially saving lives. The solutions we imagine today could help astronauts on space exploration missions, and they could also inspire healthcare tools here on Earth for remote communities or places with limited access to health services.
+
+[02:45] The future of space exploration needs your creativity. We can't wait to see what you build. Good luck, and welcome to the NASA Space Apps Challenge. Thank you.

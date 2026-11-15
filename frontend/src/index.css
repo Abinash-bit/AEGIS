@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+/* Palette taken from the five vintage illustrations: aged paper, ink, lithograph colors. */
+@theme {
+  --color-paper: #f2e8d2;
+  --color-paper-2: #e9ddc1;
+  --color-paper-3: #dfd0ae;
+  --color-card: #f7efdc;
+  --color-ink: #2b2621;
+  --color-ink-2: #5f5447;
+  --color-ink-3: #8b7d6b;
+  --color-rule: #c9b893;
+  --color-navy: #1e2a44;
+  --color-orange: #c8622a;
+  --color-teal: #4f7f86;
+  --color-mustard: #c9952b;
+  --color-brick: #9e2b25;
+  --color-sage: #6b8f5e;
+  --color-slate: #5a6e8c;
+
+  /* status (always shown with an icon and a word) */
+  --color-ok: #5e7f52;
+  --color-watch: #b8862a;
+  --color-alert: #c05a26;
+  --color-critical: #9e2b25;
+
+  /* mid-century NASA: geometric headings, clean body, typewriter numbers */
+  --font-display: "Jost", "Futura", "Century Gothic", sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* ---- light "day print" values, repeated so a [data-theme=light] block inside dark mode resets them ---- */
+[data-theme="light"] {
+  color-scheme: light;
+  --color-paper: #f2e8d2; --color-paper-2: #e9ddc1; --color-paper-3: #dfd0ae; --color-card: #f7efdc;
+  --color-ink: #2b2621; --color-ink-2: #5f5447; --color-ink-3: #8b7d6b; --color-rule: #c9b893; --color-navy: #1e2a44;
+  --color-ok: #5e7f52; --color-watch: #b8862a; --color-alert: #c05a26; --color-critical: #9e2b25;
+}
+
+/* ---- dark "night print": deep navy-ink paper, cream ink ---- */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #121826; --color-paper-2: #182032; --color-paper-3: #212b40; --color-card: #19202f;
+  --color-ink: #efe4cc; --color-ink-2: #c9bc9f; --color-ink-3: #8f8571; --color-rule: #34405a;
+  --color-navy: #d9c9a6;   /* button hover in dark mode */
+  --color-ok: #8fb27d; --color-watch: #dcae4f; --color-alert: #e5824e; --color-critical: #e35d55;
+}
+[data-theme="dark"] .faded-print { mix-blend-mode: normal; opacity: .22; filter: sepia(.2) saturate(.7) brightness(.9); }
+[data-theme="dark"] img:not(.faded-print) { filter: brightness(.94); }
+
+html, body, #root { height: 100%; }
+
+.font-display { font-weight: 500; letter-spacing: -0.015em; }
+
+body {
+  margin: 0;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  transition: background-color .25s ease, color .25s ease;
+  background-color: var(--color-paper);
+  /* soft paper grain */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .18 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  -webkit-font-smoothing: antialiased;
+}
+
+/* engraved-plate card: ink border + inner hairline */
+.plate {
+  background: var(--color-card);
+  border: 1px solid var(--color-ink-3);
+  box-shadow: inset 0 0 0 3px var(--color-card), inset 0 0 0 4px var(--color-rule);
+  border-radius: 3px;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+
+.rule-double {
+  border-top: 1px solid var(--color-ink-3);
+  border-bottom: 1px solid var(--color-ink-3);
+  height: 4px;
+}
+
+/* images placed on paper inside the app: faded, multiplied onto the page */
+.faded-print { mix-blend-mode: multiply; opacity: .55; filter: sepia(.25) saturate(.8); }
+
+.hatch {
+  background-image: repeating-linear-gradient(135deg, transparent 0 5px, rgba(95, 84, 71, .28) 5px 6px);
+}
+
+.scroll-thin { scrollbar-width: thin; scrollbar-color: var(--color-rule) transparent; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.fade-up { animation: fadeUp .35s ease-out both; }
+@keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+.pulse-dot { animation: pulseDot 1.6s ease-in-out infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.caret::after { content: "▍"; margin-left: 1px; animation: caret 1s steps(1) infinite; color: var(--color-ink-3); }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; background-image: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up, .pulse-dot, .caret::after { animation: none; }
+}

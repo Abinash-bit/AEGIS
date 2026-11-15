@@ -1,0 +1,11 @@
+Positive, Negative or Neutral, It All Matters:  NASA Explains Space Radiation
+Source: https://www.youtube.com/watch?v=yVZ2i1pg1pI
+Transcript: auto-generated captions, language en
+
+[00:02] [Music] one of our biggest challenges on a mission to mars is protecting the crew from radiation you can't see it you can't feel it you don't know that you're getting bombarded by radiation but we do have operational dosimetry and crew personal dosimeters that we can measure it space radiation comes from three major sources one is there are radiation particles trapped around the earth and they're called the van allen radiation
+
+[00:35] belts the second source of radiation is from the sun during times of intense solar activity there can be solar storms and high fluxes of radiation protons in particular can reach earth the third source of radiation in space is called galactic cosmic radiation and that's the one that's of most concern for emission to mars the galactic cosmic rays come from exploding stars that we call supernovas so i think one of the common misconceptions about space radiation is just how different it is from the type of radiation we have here
+
+[01:08] on earth so here on earth when you think about sitting down in a dentist chair they put some kind of lead blanket on your chest to protect you could protect you against x-rays in space it actually is very different we don't want heavy materials because it makes the exposure worse we want things like hydrogen things like water and polyethylene the primary reason for that is in space we have particle radiation instead of electromagnetic radiation particle irradiation is as basically everything on the periodic table hydrogen all the way up through nickel and uranium but moving at speeds that are close to the speed of light
+
+[01:40] so thinking about the differences between earth-based radiation and space radiation we have a long history and a decent amount of data about the biological consequences of exposure to terrestrial radiation where we lack data and we have a large amount of uncertainty is the biological consequences of space radiation uh and so really the next steps are and and the ongoing steps are to try to understand those exposures better and the biological consequences that follow them you
