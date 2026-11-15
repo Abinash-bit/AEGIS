@@ -5,7 +5,9 @@ import type { Briefing, Chunk, CrewCard, Dashboard, EnvId, Memory, Reading, Rout
  * On Render the static site is built with VITE_API_HOST (e.g. "aegis-api.onrender.com") or VITE_API_BASE (full URL).
  */
 const RAW = (import.meta.env.VITE_API_BASE || import.meta.env.VITE_API_HOST || '').replace(/\/$/, '')
-export const API_BASE = RAW && !/^https?:\/\//.test(RAW) ? `https://${RAW}` : RAW
+// Render's blueprint "host" property is the short service name (e.g. "aegis-api-dxc3"); its public address adds .onrender.com
+const HOST = RAW && !RAW.includes('.') && !/^https?:\/\//.test(RAW) ? `${RAW}.onrender.com` : RAW
+export const API_BASE = HOST && !/^https?:\/\//.test(HOST) ? `https://${HOST}` : HOST
 export const apiUrl = (path: string) => `${API_BASE}${path}`
 
 async function json<T>(url: string, init?: RequestInit): Promise<T> {
