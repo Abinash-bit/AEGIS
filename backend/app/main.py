@@ -10,7 +10,7 @@ import logging
 from contextlib import asynccontextmanager
 from typing import Literal, Optional
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
@@ -24,6 +24,7 @@ from .engine.hazards import HAZARD_NAMES, KB_HAZARD
 from .kb.retriever import get_retriever
 from .memory import store as memory_store
 from .models import Briefing, ChatRequest, Dashboard, SessionCreate
+from .ratelimit import ai_limit, write_limit
 from .services import build_dashboard
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
@@ -85,7 +86,7 @@ def labs(crew_id: str):
         raise HTTPException(404, str(e))
 
 
-@app.post("/api/briefing/{crew_id}", response_model=Briefing)
+@app.post("/api/briefing/{crew_id}", response_model=Briefing, dependencies=[Depends(ai_limit)])
 async def briefing(crew_id: str, env: EnvId = "mars_transit", scenario: Scenario = "demo", force: bool = False,
                    replay_start: Optional[str] = None, replay_end: Optional[str] = None):
     d = await _dash(crew_id, env, scenario, replay_start, replay_end)
@@ -95,7 +96,7 @@ async def briefing(crew_id: str, env: EnvId = "mars_transit", scenario: Scenario
         raise HTTPException(503, str(e))
 
 
-@app.post("/api/briefing/{crew_id}/stream")
+@app.post("/api/briefing/{crew_id}/stream", dependencies=[Depends(ai_limit)])
 async def briefing_stream(crew_id: str, env: EnvId = "mars_transit", scenario: Scenario = "demo", force: bool = False,
                           replay_start: Optional[str] = None, replay_end: Optional[str] = None):
     """Server-sent events: dashboard_read, routing, retrieval, agent_done, writing, briefing, error."""
@@ -111,7 +112,7 @@ async def briefing_stream(crew_id: str, env: EnvId = "mars_transit", scenario: S
     return StreamingResponse(events(), media_type="text/event-stream", headers={"Cache-Control": "no-cache"})
 
 
-@app.post("/api/chat")
+@app.post("/api/chat", dependencies=[Depends(ai_limit)])
 async def chat(req: ChatRequest, mode: Literal["agents", "direct"] = "agents",
                replay_start: Optional[str] = None, replay_end: Optional[str] = None):
     """Server-sent events: session, routing, citations, agent_done, token, memory_saved, done, error.
@@ -139,7 +140,7 @@ async def chat(req: ChatRequest, mode: Literal["agents", "direct"] = "agents",
 
 
 # ---- conversation sessions ---------------------------------------------------
-@app.post("/api/sessions")
+@app.post("/api/sessions", dependencies=[Depends(write_limit)])
 def create_session(body: SessionCreate):
     if body.crew_id not in CREW:
         raise HTTPException(404, f"unknown crew member '{body.crew_id}'")
@@ -226,7 +227,7 @@ class ReadingIn(BaseModel):
     note: Optional[str] = None
 
 
-@app.post("/api/readings/{crew_id}")
+@app.post("/api/readings/{crew_id}", dependencies=[Depends(write_limit)])
 def add_reading(crew_id: str, r: ReadingIn):
     if crew_id not in CREW:
         raise HTTPException(404, f"unknown crew member '{crew_id}'")
@@ -262,7 +263,7 @@ class ReportIn(BaseModel):
     data: dict
 
 
-@app.post("/api/reports/{crew_id}")
+@app.post("/api/reports/{crew_id}", dependencies=[Depends(write_limit)])
 def send_report(crew_id: str, body: ReportIn):
     env = get_environment(body.environment)
     return memory_store.save_report(crew_id, env.id, body.data, env.comms_delay_s)

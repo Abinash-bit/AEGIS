@@ -85,6 +85,22 @@ Risk keywords and the risk→hazard mapping live in `scripts/risk_map.json`.
 .venv/Scripts/python -m pytest -q tests     # offline: the model is mocked, DONKI is a fixed window
 ```
 
+## Rate limits
+
+The deployment is public and every AI request costs money, so `app/ratelimit.py` limits:
+
+| Limit | Default | Applies to |
+|---|---|---|
+| Per visitor, per minute | 6 | briefings + chat |
+| Per visitor, per hour | 40 | briefings + chat |
+| Whole site, per day | 600 | briefings + chat, all visitors together |
+| Per visitor, per minute | 20 | check-ins, reports, new sessions |
+
+- **When a limit is hit:** the API answers `429` with a `Retry-After` header and a plain-language message, which the app shows.
+- **Visitor identity:** visitors are identified by IP address (`X-Forwarded-For` behind Render's proxy).
+- **Storage:** windows are kept in memory, which suits a single server, and reset on restart.
+- **Settings:** change limits with the `RATE_LIMIT_*` environment variables (see `.env.example`), or turn them off with `RATE_LIMIT_ENABLED=0`.
+
 ## Notes
 
 - **Thresholds** in `data/telemetry.py` are demo thresholds for color coding, not clinical or NASA flight rules.

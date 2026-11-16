@@ -20,6 +20,12 @@ services:
         value: text-embedding-3-small
       - key: CORS_ORIGINS           # the API holds no cookies; any origin may call it
         value: "*"
+      - key: RATE_LIMIT_AI_PER_MINUTE   # per visitor: briefings + chat
+        value: "6"
+      - key: RATE_LIMIT_AI_PER_HOUR     # per visitor
+        value: "40"
+      - key: RATE_LIMIT_AI_PER_DAY      # whole site: caps the daily API spend
+        value: "600"
     # Persistent storage for chats, memories, check-ins and reports (paid plans only):
     # disk:
     #   name: aegis-data
