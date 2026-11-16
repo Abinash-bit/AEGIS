@@ -46,8 +46,9 @@ Scenario = Literal["demo", "nominal", "landing"]
 @app.get("/api/health")
 def health():
     r = get_retriever()
-    return {"ok": True, "claude_configured": config.claude_configured(), "kb_chunks": len(r.chunks),
-            "retrieval_mode": r.mode, "models": {"coordinator": config.COORDINATOR_MODEL, "hazard": config.HAZARD_AGENT_MODEL}}
+    return {"ok": True, "llm_provider": config.LLM_PROVIDER, "ai_configured": config.llm_configured(),
+            "kb_chunks": len(r.chunks), "retrieval_mode": r.mode,
+            "models": {"coordinator": config.COORDINATOR_MODEL, "hazard": config.HAZARD_AGENT_MODEL, "memory": config.MEMORY_MODEL}}
 
 
 @app.get("/api/meta")

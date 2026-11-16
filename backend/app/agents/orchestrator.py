@@ -295,7 +295,7 @@ async def extract_memories(crew_id: str, sid: str, message: str) -> list[dict]:
 async def chat_stream(d: Dashboard, message: str, session: dict, mode: str = "agents") -> AsyncIterator[dict]:
     """Yields events: session, routing, citations, agent_done/agent_error, token, memory_saved, done, error.
 
-    Memory: the session's turns are stored in SQLite; the last turns go to Claude; citation numbers are stable for
+    Memory: the session's turns are stored in SQLite; the last turns go to the model; citation numbers are stable for
     the whole session; the latest proactive briefing and the astronaut's long-term memories are added to the context.
     """
     t0 = time.perf_counter()

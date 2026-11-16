@@ -17,7 +17,7 @@ FastAPI service that powers the crew-health dashboard and the multi-agent RAG as
 data/            donki.py (live, cached) · labs.py (real) · telemetry.py (simulated) · environments.py
 engine/hazards   fixed rules → status of the 5 hazards + triggers (the LLM never sets status)
 kb/retriever     hybrid search: BM25 + embeddings (OpenAI text-embedding-3-small; local fastembed fallback), filtered by hazard
-agents/          5 hazard agents (RAD ISO DIST GRAV ENV) + coordinator (Claude)
+agents/          5 hazard agents + coordinator (OpenAI GPT-5.5 / GPT-5.4-mini; Claude optional via LLM_PROVIDER)
 main.py          REST + server-sent events API
 ```
 
@@ -28,7 +28,7 @@ main.py          REST + server-sent events API
 
 Stored in SQLite at `backend/data/aegis.db` (git-ignored).
 
-- **Sessions:** every turn is saved, and the last 8 turns go to Claude, so the conversation survives page reloads.
+- **Sessions:** every turn is saved, and the last 8 turns go to the model, so the conversation survives page reloads.
 - **Follow-ups:** short or connective questions ("what about at night?") are routed and searched together with the previous question, and they keep the previous turn's agents.
 - **Stable citations:** a source keeps the same number for the whole session. Sources cited in the previous answer stay in context.
 - **Latest briefing:** the newest proactive briefing is added to the chat context, with its citations renumbered into the session.
@@ -40,20 +40,20 @@ Stored in SQLite at `backend/data/aegis.db` (git-ignored).
 cd backend
 python -m venv .venv
 .venv/Scripts/pip install -r requirements.txt     # Windows (use .venv/bin/... on macOS/Linux)
-cp .env.example .env                              # then set ANTHROPIC_API_KEY
+cp .env.example .env                              # then set OPENAI_API_KEY
 .venv/Scripts/uvicorn app.main:app --reload --port 8000
 ```
 
 - Open http://localhost:8000/docs for the interactive API.
 - With `OPENAI_API_KEY` set, the 202 chunks are embedded once with OpenAI (about 12 s) and cached.
 - Without that key, the local embedding model is downloaded once (~130 MB) and used instead.
-- Everything except briefings and chat works without an Anthropic key.
+- Everything except briefings and chat works without an API key.
 
 ## Endpoints
 
 | Method | Path | Purpose |
 |---|---|---|
-| GET | `/api/health` | Status, whether Claude is configured, retrieval mode |
+| GET | `/api/health` | Status, reasoning provider and models, retrieval mode |
 | GET | `/api/meta` | Crew list, environments, hazards |
 | GET | `/api/dashboard/{crew_id}?env=mars_transit&scenario=demo` | Full dashboard (hazards, vitals, labs, space weather, readiness) |
 | GET | `/api/space-weather` | DONKI events (add `replay_start=2024-05-08&replay_end=2024-05-15` for a historical storm) |
@@ -82,7 +82,7 @@ Risk keywords and the risk→hazard mapping live in `scripts/risk_map.json`.
 ## Tests
 
 ```bash
-.venv/Scripts/python -m pytest -q tests     # offline: Claude is mocked, DONKI is a fixed window
+.venv/Scripts/python -m pytest -q tests     # offline: the model is mocked, DONKI is a fixed window
 ```
 
 ## Notes

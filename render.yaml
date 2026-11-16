@@ -12,9 +12,9 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.7
-      - key: ANTHROPIC_API_KEY      # set in the dashboard (never committed)
-        sync: false
-      - key: OPENAI_API_KEY         # set in the dashboard (never committed)
+      - key: LLM_PROVIDER           # reasoning: openai (default) or anthropic
+        value: openai
+      - key: OPENAI_API_KEY         # set in the dashboard (never committed): reasoning + embeddings
         sync: false
       - key: EMBEDDING_MODEL
         value: text-embedding-3-small

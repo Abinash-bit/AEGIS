@@ -16,15 +16,20 @@ LABS_DIR = PROJECT_DIR / "data" / "inspiration4"
 CACHE_DIR = BACKEND_DIR / ".cache"
 CACHE_DIR.mkdir(exist_ok=True)
 
-# --- Claude ----------------------------------------------------------------
-# Opus 5.5 for every agent by default; override per role via env if you want to trade cost/latency.
-COORDINATOR_MODEL = os.getenv("COORDINATOR_MODEL", "claude-opus-5-5")
-HAZARD_AGENT_MODEL = os.getenv("HAZARD_AGENT_MODEL", "claude-opus-5-5")
-COORDINATOR_EFFORT = os.getenv("COORDINATOR_EFFORT", "medium")
+# --- Reasoning model provider -------------------------------------------------
+# LLM_PROVIDER = "openai" (default) or "anthropic". Models can be overridden per role.
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai").lower()
+_DEFAULTS = {
+    "openai": {"coordinator": "gpt-5.5", "hazard": "gpt-5.4-mini", "memory": "gpt-5.4-mini"},
+    "anthropic": {"coordinator": "claude-opus-5-5", "hazard": "claude-opus-5-5", "memory": "claude-opus-5-5"},
+}[LLM_PROVIDER if LLM_PROVIDER in ("openai", "anthropic") else "openai"]
+COORDINATOR_MODEL = os.getenv("COORDINATOR_MODEL", _DEFAULTS["coordinator"])   # briefings + chat answers
+HAZARD_AGENT_MODEL = os.getenv("HAZARD_AGENT_MODEL", _DEFAULTS["hazard"])      # the 5 specialist agents
+MEMORY_MODEL = os.getenv("MEMORY_MODEL", _DEFAULTS["memory"])                  # long-term memory extraction
+COORDINATOR_EFFORT = os.getenv("COORDINATOR_EFFORT", "low" if LLM_PROVIDER == "openai" else "medium")  # low|medium|high
 HAZARD_AGENT_EFFORT = os.getenv("HAZARD_AGENT_EFFORT", "low")
-MEMORY_MODEL = os.getenv("MEMORY_MODEL", "claude-opus-5-5")      # long-term memory extraction
 MEMORY_EFFORT = os.getenv("MEMORY_EFFORT", "low")
-# Server-side refusal fallback (beta). Set USE_FALLBACKS=0 to disable.
+# Anthropic only: server-side refusal fallback (beta). Set USE_FALLBACKS=0 to disable.
 USE_FALLBACKS = os.getenv("USE_FALLBACKS", "1") == "1"
 FALLBACK_BETA = "server-side-fallback-2026-07-01"
 
@@ -48,3 +53,8 @@ CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1
 
 def claude_configured() -> bool:
     return bool(os.getenv("ANTHROPIC_API_KEY") or os.getenv("ANTHROPIC_AUTH_TOKEN") or os.getenv("ANTHROPIC_PROFILE"))
+
+
+def llm_configured() -> bool:
+    """Is the selected reasoning provider usable?"""
+    return bool(os.getenv("OPENAI_API_KEY")) if LLM_PROVIDER == "openai" else claude_configured()

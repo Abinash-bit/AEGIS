@@ -88,7 +88,7 @@ They need a tool that turns readings into clear, trustworthy guidance: *what doe
 |---|---|
 | **Frontend** | React 19 · TypeScript · Vite · Tailwind CSS 4 · React Router · streaming via `fetch` + server-sent events |
 | **Backend** | Python · FastAPI · SQLite (sessions, memories, check-ins, reports) |
-| **Reasoning** | **Claude Opus 5.5** (Anthropic API): 5 hazard agents + coordinator, structured JSON outputs, streaming |
+| **Reasoning** | **OpenAI GPT-5.5** (coordinator, chat) and **GPT-5.4-mini** (5 hazard agents, memory): strict JSON-schema outputs, streaming. Claude can be switched in with `LLM_PROVIDER=anthropic` |
 | **Retrieval (RAG)** | Hybrid search: **BM25** keyword + **OpenAI `text-embedding-3-small`** vectors, fused with Reciprocal Rank Fusion, filtered by hazard |
 | **Knowledge base build** | Word sources split along their own headings (never summarised), each chunk tagged with hazard, NASA risk, source URL and heading path; duplicates and boilerplate removed |
 | **Rules engine** | Readable thresholds turn data into hazard status and *triggers*; the AI never sets status |
@@ -141,14 +141,14 @@ flowchart TD
 
 ## 5. Run it locally
 
-**You need:** Python 3.11+, Node.js 20+, an [Anthropic API key](https://platform.claude.com) and an OpenAI API key (for embeddings).
+**You need:** Python 3.11+, Node.js 20+ and an OpenAI API key (used for both reasoning and embeddings).
 
 ```bash
 # 1 · backend
 cd backend
 python -m venv .venv
 .venv/Scripts/pip install -r requirements.txt        # macOS/Linux: .venv/bin/pip
-cp .env.example .env                                 # add ANTHROPIC_API_KEY and OPENAI_API_KEY
+cp .env.example .env                                 # add OPENAI_API_KEY
 .venv/Scripts/uvicorn app.main:app --port 8000       # API docs: http://localhost:8000/docs
 
 # 2 · frontend (new terminal)
@@ -160,7 +160,7 @@ npm run dev                                          # open http://localhost:517
 **Notes**
 
 - **First start:** the 202 knowledge-base chunks are embedded once (about 12 s) and cached. Without an OpenAI key, a local embedding model is downloaded instead.
-- **Without a Claude key:** everything except briefings and chat works.
+- **Without an API key:** everything except briefings and chat works (search falls back to keywords plus a local embedding model).
 - **Rebuilding the knowledge base** from the Word files: `cd backend && .venv/Scripts/python scripts/build_kb.py`.
 - **Tests:** `cd backend && .venv/Scripts/python -m pytest -q`.
 - **Demo shortcut:** `/console?ask=How am I doing today?` opens the console and asks automatically.
@@ -172,7 +172,7 @@ backend/            FastAPI app: data sources, rules engine, retrieval, agents, 
   app/data/         donki.py (live) · labs.py (real OSDR) · telemetry.py (simulated + logged) · environments.py
   app/engine/       hazards.py: rules → status + triggers
   app/kb/           retriever.py: hybrid BM25 + embeddings
-  app/agents/       orchestrator.py · prompts.py · llm.py (Claude)
+  app/agents/       orchestrator.py · prompts.py · llm.py (OpenAI, or Claude as an option)
   app/memory/       store.py: SQLite sessions, memories, check-ins, reports
   scripts/          build_kb.py: Word files → knowledge-base chunks
 frontend/           React app (pages, assistant, body map, check-ins, emergency, report)

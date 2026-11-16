@@ -32,7 +32,7 @@ function qs(p: MissionParams, extra: Record<string, string> = {}) {
 }
 
 export const api = {
-  health: () => json<{ ok: boolean; claude_configured: boolean; kb_chunks: number; retrieval_mode: string }>('/api/health'),
+  health: () => json<{ ok: boolean; ai_configured: boolean; llm_provider: string; kb_chunks: number; retrieval_mode: string }>('/api/health'),
   dashboard: (p: MissionParams) => json<Dashboard>(`/api/dashboard/${p.crew}?${qs(p)}`),
   spaceWeather: (replay = false) =>
     json<SpaceWeather>(`/api/space-weather${replay ? `?replay_start=${REPLAY_WINDOW.start}&replay_end=${REPLAY_WINDOW.end}` : ''}`),
